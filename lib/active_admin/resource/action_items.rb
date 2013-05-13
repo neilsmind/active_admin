@@ -61,7 +61,7 @@ module ActiveAdmin
         # Edit link on show
         add_action_item :only => :show do
           if controller.action_methods.include?('edit') && authorized?(ActiveAdmin::Auth::UPDATE, resource)
-            link_to(I18n.t("<i class='icon-edit'></i> ".html_safe + 'active_admin.edit_model', :model => active_admin_config.resource_label), edit_resource_path(resource), :class => "btn btn-large")
+            link_to("<i class='icon-edit'></i> ".html_safe + I18n.t('active_admin.edit_model', :model => active_admin_config.resource_label), edit_resource_path(resource), :class => "btn btn-large")
           end
         end
 
