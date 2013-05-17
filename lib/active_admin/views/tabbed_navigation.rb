@@ -42,12 +42,18 @@ module ActiveAdmin
       def build_menu_item(item)
         li :id => item.id do |li|
           li.add_class "current" if item.current? assigns[:current_tab]
- 
-          text_node link_to item.label(self), item.url(self), item.html_options
+          
+          if children = item.items(self).presence
+            a :href => item.url(self), :class => "dropdown-toggle", :"data-toggle" => "dropdown" do
+              text_node(item.label(self)) + b(:class => :caret)
+            end
+          else
+            text_node link_to item.label(self), item.url(self), item.html_options
+          end
  
           if children = item.items(self).presence
-            li.add_class "has_nested"
-            ul do
+            li.add_class "dropdown"
+            ul :class => "dropdown-menu" do
               children.each{ |child| build_menu_item child }
             end
           end

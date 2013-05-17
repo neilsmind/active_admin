@@ -27,7 +27,7 @@ module ActiveAdmin
       end
 
       def build_utility_navigation
-        insert_tag view_factory.utility_navigation, @utility_menu, :id => "utility_nav", :class => 'header-item tabs'
+        insert_tag view_factory.utility_navigation, @utility_menu, :id => "utility_nav", :class => 'nav header-item pull-right' 
       end
 
       def default_class_name
