@@ -108,6 +108,9 @@ body.active_admin {
           content: "Showing ";
         }
 
+        a {
+          font-weight: bold;
+         }
         small {
           display: inline-block;
           font-weight: normal;

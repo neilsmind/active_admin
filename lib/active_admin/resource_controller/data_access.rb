@@ -21,8 +21,8 @@ module ActiveAdmin
       # Retrieve, memoize and authorize the current collection from the db. This
       # method delegates the finding of the collection to #find_collection.
       #
-      # Once #collection has been called, the collection is available using 
-      # either the @collection instance variable or an instance variable named 
+      # Once #collection has been called, the collection is available using
+      # either the @collection instance variable or an instance variable named
       # after the resource that the collection is for. eg: Post => @post.
       #
       # @returns [ActiveRecord::Relation] The collection for the index
@@ -38,15 +38,16 @@ module ActiveAdmin
       end
 
 
-      # Does the actual work of retrieving the current collection from the db. 
-      # This is a great method to override if you would like to perform 
-      # some additional db # work before your controller returns and 
+      # Does the actual work of retrieving the current collection from the db.
+      # This is a great method to override if you would like to perform
+      # some additional db # work before your controller returns and
       # authorizes the collection.
       #
       # @returns [ActiveRecord::Relation] The collectin for the index
       def find_collection
         collection = scoped_collection
 
+        collection = apply_authorization_scope(collection)
         collection = apply_sorting(collection)
         collection = apply_filtering(collection)
         collection = apply_scoping(collection)
@@ -67,10 +68,10 @@ module ActiveAdmin
       # scope_to method from the Scoping module instead of overriding this
       # method.
       def scoped_collection
-        scope_for_authorization end_of_association_chain
+        end_of_association_chain
       end
 
-      # Retrieve, memoize and authorize a resource based on params[:id]. The 
+      # Retrieve, memoize and authorize a resource based on params[:id]. The
       # actual work of finding the resource is done in #find_resource.
       #
       # This method is used on all the member actions:
@@ -105,7 +106,7 @@ module ActiveAdmin
       end
 
 
-      # Does the actual work of finding a resource in the database. This 
+      # Does the actual work of finding a resource in the database. This
       # method uses the finder method as defined in InheritedResources.
       #
       # @returns [ActiveRecord::Base] An active record object.
@@ -114,8 +115,8 @@ module ActiveAdmin
       end
 
 
-      # Builds, memoize and authorize a new instance of the resource. The 
-      # actual work of building the new instance is delegated to the 
+      # Builds, memoize and authorize a new instance of the resource. The
+      # actual work of building the new instance is delegated to the
       # #build_new_resource method.
       #
       # This method is used to instantiate and authorize new resources in the
@@ -202,14 +203,15 @@ module ActiveAdmin
 
       # Gives the authorization library a change to pre-scope the collection.
       #
-      # In the case of the CanCan adapter, it calls `#accessible_by` on 
+      # In the case of the CanCan adapter, it calls `#accessible_by` on
       # the collection.
       #
       # @param [ActiveRecord::Relation] collection The collection to scope
       #
       # @retruns [ActiveRecord::Relation] a scoped collection of query
-      def scope_for_authorization(collection)
-        active_admin_authorization.scope_collection(collection)
+      def apply_authorization_scope(collection)
+        action_name = action_to_permission(params[:action])
+        active_admin_authorization.scope_collection(collection, action_name)
       end
 
 
@@ -260,7 +262,7 @@ module ActiveAdmin
         @current_scope ||= if params[:scope]
           active_admin_config.get_scope_by_id(params[:scope]) if params[:scope]
         else
-          active_admin_config.default_scope
+          active_admin_config.default_scope(self)
         end
       end
 

@@ -42,7 +42,7 @@ module ActiveAdmin
     end
 
     def has_many(association, options = {}, &block)
-      options = { :for => association }.merge(options)
+      options = { :for => association, :new_record => true }.merge(options)
       options[:class] ||= ""
       options[:class] << "inputs has_many_fields"
 
@@ -57,9 +57,13 @@ module ActiveAdmin
         end
 
         if has_many_form.object.new_record?
-          contents += template.content_tag(:li) do
+          contents += template.content_tag(:li, :class => 'has_many_delete') do
             template.link_to I18n.t('active_admin.has_many_delete'), "#", :onclick => "$(this).closest('.has_many_fields').remove(); return false;", :class => "button"
           end
+        elsif options[:allow_destroy]
+          has_many_form.input :_destroy, :as => :boolean, :wrapper_html => {:class => "has_many_remove"},
+                                                          :label => I18n.t('active_admin.has_many_remove')
+
         end
 
         contents
@@ -67,10 +71,17 @@ module ActiveAdmin
 
       form_buffers.last << with_new_form_buffer do
         template.content_tag :div, :class => "has_many #{association}" do
-          form_buffers.last << template.content_tag(:h3, object.class.reflect_on_association(association).klass.model_name.human(:count => 1.1))
+          # Allow customization of the nested form heading
+          unless options.key?(:heading) && !options[:heading]
+            form_heading = options[:heading] ||
+              object.class.reflect_on_association(association).klass.model_name.human(:count => 1.1)
+            form_buffers.last << template.content_tag(:h3, form_heading)
+          end
+
           inputs options, &form_block
 
-          form_buffers.last << js_for_has_many(association, form_block, template)
+          js = options[:new_record] ? js_for_has_many(association, form_block, template) : ""
+          form_buffers.last << js.html_safe
         end
       end
     end
@@ -170,21 +181,19 @@ module ActiveAdmin
 
     # Capture the ADD JS
     def js_for_has_many(association, form_block, template)
-      association_reflection = object.class.reflect_on_association(association)
-      association_human_name = association_reflection.klass.model_name.human
-      placeholder = "NEW_#{association_human_name.upcase.split(' ').join('_')}_RECORD"
+      assoc_reflection = object.class.reflect_on_association(association)
+      assoc_name       = assoc_reflection.klass.model_name
+      placeholder      = "NEW_#{assoc_name.upcase.split(' ').join('_')}_RECORD"
+      opts = {
+        :for         => [association, assoc_reflection.klass.new],
+        :class       => "inputs has_many_fields",
+        :for_options => { :child_index => placeholder }
+      }
+      js = with_new_form_buffer{ inputs_for_nested_attributes opts, &form_block }
+      js = template.escape_javascript js
 
-      js = with_new_form_buffer do
-        inputs_for_nested_attributes :for => [association, association_reflection.klass.new],
-                                     :class => "inputs has_many_fields",
-                                     :for_options => { :child_index => placeholder },
-                                     &form_block
-      end
-
-      js = template.escape_javascript(js)
-
-      text = I18n.t 'active_admin.has_many_new', :model => association_human_name
       onclick = "$(this).before('#{js}'.replace(/#{placeholder}/g, new Date().getTime())); return false;"
+      text    = I18n.t 'active_admin.has_many_new', :model => assoc_name.human
 
       template.link_to(text, "#", :onclick => onclick, :class => "button").html_safe
     end

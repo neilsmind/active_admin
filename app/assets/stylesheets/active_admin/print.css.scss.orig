@@ -1,0 +1,266 @@
+/* Active Admin Print Stylesheet */
+
+// Set colors used elsewhere
+$primary-color: black;
+$text-color: black;
+
+@import "active_admin/themes/default";
+
+body.active_admin {
+
+  font-family: Helvetica, Arial, sans-serif;
+  line-height: 150%;
+  font-size: 72%;
+  background: #fff;
+  width: 99%;
+  margin: 0;
+  padding: .5%;
+  color: $text-color;
+
+  a {
+    color: $text-color;
+    text-decoration: none;
+  }
+
+  h3 {
+    font-weight: bold;
+    margin-bottom: .5em;
+  }
+
+  // Header
+  #header {
+
+    .navbar-inner {
+      border:none;
+    }
+
+    &.navbar-fixed-top {
+      position:relative;
+    }
+
+    #tabs, .tabs, #utility_nav {
+      display: none;
+    }
+
+    #site_title {
+      font-weight: bold;
+      padding-left:0px;
+      margin-left:0px;
+    }
+
+  }
+
+  .flashes, .alert {
+    display: none;
+  }
+
+  #title_bar {
+    border:none;
+    @include box-shadow(none);
+    padding:0px;
+
+    h2 {
+      line-height: 1.5em;
+      margin: 0;
+    }
+
+    .breadcrumb, #titlebar_right {
+      display: none;
+    }
+  }
+
+  // Content
+  #active_admin_content {
+    clear: both;
+  }
+
+  .container-fluid {
+    padding:0px;
+  }
+
+  // Footer
+  #footer {
+    display: none;
+  }
+
+  // Tables
+  .table_tools {
+
+    #batch_actions_selector {
+      display:none;
+    }
+
+    .scopes {
+      margin-left:0px;
+      padding:0px;
+    }
+
+    .scope {
+      display:none;
+
+<<<<<<< HEAD
+      &.active {
+        display:block;
+        border:none;
+        @include box-shadow(none);
+        padding:0px;
+=======
+      &.scope.selected, &.index.selected {
+        display: block;
+>>>>>>> refs/heads/master
+
+        &:before {
+          content: "Showing ";
+        }
+
+        small {
+          display: inline-block;
+          font-weight: normal;
+          font-size: .9em;
+        }
+      }
+
+    }
+
+  }
+
+  table {
+    margin-bottom: 1.5em;
+    text-align: left;
+    width: 100%;
+
+    thead {
+      display: table-header-group;
+
+      th {
+        background: none;
+        border-bottom: medium solid black;
+        font-weight: bold;
+
+        a{
+          text-decoration: none;
+        }
+      }
+    }
+
+    th, td {
+      padding: .5em 1em;
+
+      .member_link {
+        display: none;
+      }
+    }
+
+    td {
+      border-bottom: thin solid black;
+    }
+
+    tr{
+      page-break-inside: avoid;
+    }
+  }
+
+  // Index
+  #index_footer, .pagination_information {
+    display: none;
+  }
+
+  .index_grid {
+    td {
+      border: none;
+      text-align: center;
+      vertical-align: middle;
+
+      img {
+        max-width: 1in;
+      }
+    }
+  }
+
+  // Show
+  .panel {
+    border-bottom: thick solid #ccc;
+    margin-bottom: 3em;
+    padding-bottom: 2em;
+    page-break-inside: avoid;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  .comments {
+    form {
+      display: none;
+    }
+
+    .active_admin_comment {
+      border-top: thin solid black;
+      padding-top: 1em;
+
+      .active_admin_comment_meta {
+        h4 {
+          font-size: 1em;
+          font-weight: bold;
+          float: left;
+          margin-right: .5em;
+          margin-bottom: 0;
+        }
+
+        span {
+          font-size: .9em;
+          font-style: italic;
+          vertical-align: top;
+        }
+      }
+
+      .active_admin_comment_body {
+        clear: both;
+        margin-bottom: 1em;
+      }
+    }
+  }
+
+
+  // Attribute Tables
+  .attributes_table {
+
+    th {
+      vertical-align: top;
+
+      &:after {
+        content: ':';
+      }
+    }
+
+    td {
+      img {
+        max-height: 4in;
+        max-width: 6in;
+      }
+    }
+  }
+
+  // Sidebars
+  #filters_sidebar_section {
+    display: none;
+  }
+
+  // Forms
+  form {
+    .buttons, .actions, abbr {
+      display: none;
+    }
+
+    ol > li {
+      &.password, &.hidden {
+        display:none;
+      }
+
+      input[type=file] {
+        display:none;
+      }
+    }
+  }
+
+}

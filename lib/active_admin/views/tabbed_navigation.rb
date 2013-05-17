@@ -22,9 +22,9 @@ module ActiveAdmin
         build_menu
       end
 
-      # Returns the first level menu items to display
+      # The top-level menu items that should be displayed.
       def menu_items
-        displayable_items(menu.items)
+        menu.items(self)
       end
 
       def tag_name

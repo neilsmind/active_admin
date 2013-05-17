@@ -46,7 +46,7 @@ module ActiveAdmin
       resource_routes = method(:resource_routes)
 
       router.instance_exec(@application.namespaces, self) do |namespaces, aa_router|
-        resources = namespaces.values.collect{|n| n.resources.resources }.flatten
+        resources = namespaces.values.map{ |n| n.resources.values }.flatten
         resources.each do |config|
           route_definition_block = aa_router.resource_routes(config)
 
@@ -88,8 +88,10 @@ module ActiveAdmin
             # Define any member actions
             member do
               config.member_actions.each do |action|
-                # eg: get :comment
-                send(action.http_verb, action.name)
+                [*action.http_verb].each do |http_verb|
+                  # eg: get :comment
+                  send(http_verb, action.name)
+                end
               end
             end
 

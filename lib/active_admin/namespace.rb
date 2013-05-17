@@ -3,8 +3,6 @@ require 'active_admin/resource_collection'
 
 module ActiveAdmin
 
-  class ResourceMismatchError < StandardError; end
-
   # Namespaces are the basic organizing principle for resources within Active Admin
   #
   # Each resource is registered into a namespace which defines:
@@ -13,7 +11,7 @@ module ActiveAdmin
   #   * the menu which gets displayed (other resources in the same namespace)
   #
   # For example:
-  #   
+  #
   #   ActiveAdmin.register Post, :namespace => :admin
   #
   # Will register the Post model into the "admin" namespace. This will namespace the
@@ -24,7 +22,7 @@ module ActiveAdmin
   #
   #   ActiveAdmin.register Post, :namespace => false
   #
-  # This will register the resource to an instantiated namespace called :root. The 
+  # This will register the resource to an instantiated namespace called :root. The
   # resource will be accessible from "/posts" and the controller will be PostsController.
   #
   class Namespace
@@ -43,8 +41,8 @@ module ActiveAdmin
       build_menu_collection
     end
 
-    # Register a resource into this namespace. The preffered method to access this is to 
-    # use the global registration ActiveAdmin.register which delegates to the proper 
+    # Register a resource into this namespace. The preffered method to access this is to
+    # use the global registration ActiveAdmin.register which delegates to the proper
     # namespace instance.
     def register(resource_class, options = {}, &block)
       config = find_or_build_resource(resource_class, options)
@@ -82,7 +80,7 @@ module ActiveAdmin
     # Returns the name of the module if required. Will be nil if none
     # is required.
     #
-    # eg: 
+    # eg:
     #   Namespace.new(:admin).module_name # => 'Admin'
     #   Namespace.new(:root).module_name # => nil
     #
@@ -105,7 +103,7 @@ module ActiveAdmin
 
     # Returns the first registered ActiveAdmin::Resource instance for a given class
     def resource_for(klass)
-      resources.find_by_resource_class(klass)
+      resources[klass]
     end
 
     # Override from ActiveAdmin::Settings to inherit default attributes
@@ -181,7 +179,7 @@ module ActiveAdmin
                   :url    => '#',
                   :id     => 'current_user',
                   :if     => proc{ current_active_admin_user? }
-                  
+
         add_logout_button_to_menu menu
       end
     end

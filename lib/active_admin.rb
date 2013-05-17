@@ -7,7 +7,7 @@ require 'sass'
 require 'inherited_resources'
 require 'jquery-rails'
 require 'arbre'
-require 'active_admin/dependency_checker' 
+require 'active_admin/dependency_checker'
 require 'active_admin/sass/helpers'
 require 'active_admin/engine'
 
@@ -53,14 +53,6 @@ module ActiveAdmin
   autoload :ViewHelpers,              'active_admin/view_helpers'
   autoload :Views,                    'active_admin/views'
 
-  class Railtie < ::Rails::Railtie
-    config.after_initialize do
-      # Add load paths straight to I18n, so engines and application can overwrite it.
-      require 'active_support/i18n'
-      I18n.load_path.unshift *Dir[File.expand_path('../active_admin/locales/*.yml', __FILE__)]
-    end
-  end
-
   class << self
 
     attr_accessor :application
@@ -91,7 +83,7 @@ module ActiveAdmin
     # Migration MoveAdminNotesToComments generated with version 0.2.2 might reference
     # to ActiveAdmin.default_namespace.
     delegate :default_namespace, :to => :application
-    ActiveAdmin::Deprecation.deprecate self, :default_namespace, 
+    ActiveAdmin::Deprecation.deprecate self, :default_namespace,
       "ActiveAdmin.default_namespace is deprecated. Please use ActiveAdmin.application.default_namespace"
 
     # A callback is triggered each time (before) Active Admin loads the configuration files.
